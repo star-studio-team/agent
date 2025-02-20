@@ -14,7 +14,7 @@ async def main():
         common.client = client
         while True:
             user_prompt = input('message> ')
-            print('waiting for response, it can be very log...')
+            print('waiting for response, it can be very long...')
             if config.llm.stream:
                 await agent.llm.result.stream(user_prompt)
             else:
