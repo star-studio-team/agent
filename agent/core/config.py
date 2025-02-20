@@ -17,6 +17,7 @@ class llm:
     retries: int = 10
     stream: bool = False
     delta: bool = False
+    user_prompt: str = os.getenv('user_prompt') or ''
     system_prompt = f'''
 - you are able to run any commands in podman container
 - default image is {podman.default_image}

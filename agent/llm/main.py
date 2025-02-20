@@ -12,8 +12,12 @@ async def main():
         timeout=config.podman.timeout,
     ) as client:
         common.client = client
+        env_user_prompt = config.llm.user_prompt
         while True:
-            user_prompt = input('message> ')
+            if env_user_prompt:
+                user_prompt = env_user_prompt
+            else:
+                user_prompt = input('message> ')
             print('waiting for response, it can be very long...')
             if config.llm.stream:
                 await agent.llm.result.stream(user_prompt)
@@ -21,4 +25,6 @@ async def main():
                 await agent.llm.result.no_stream(user_prompt)
             await agent.podman.stop()
             await agent.podman.delete()
+            if env_user_prompt:
+                break
 
