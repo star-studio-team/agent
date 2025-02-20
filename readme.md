@@ -17,6 +17,11 @@ python -m pip install -U uv
 env api_key=YOUR_GEMINI_API_KEY uv run agent
 ```
 
+- It is also possible to set User_Prompt as ENV
+```shell
+env api_key=YOUR_GEMINI_API_KEY user_prompt='write python app, try run it in podman, and lint it with ruff and pyright' uv run agent
+```
+
 ### license
 
 gnu affero general public license version 3
