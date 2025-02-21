@@ -29,6 +29,6 @@ async def main():
                 await agent.llm.result.no_stream(user_prompt)
             await agent.podman.stop()
             await agent.podman.delete()
-            if env_user_prompt:
+            if env_user_prompt or file_user_prompt:
                 break
 
