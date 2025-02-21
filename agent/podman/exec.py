@@ -8,6 +8,7 @@ async def exec(
     command: list[str],
     writer: agent.llm.writer.Writer = agent.llm.writer.Writer(),
 ) -> str:
+    print("exec command: ", command)
     created = await common.client.post(
         url=f'{config.podman.api_url}/containers/{config.podman.container_name}/exec',
         json={
