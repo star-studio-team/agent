@@ -15,7 +15,7 @@ class llm:
     model_name: str = 'gemini-2.0-flash'
     api_key: str = os.getenv('api_key') or ''
     retries: int = 10
-    stream: bool = False
+    stream: bool = True
     delta: bool = False
     user_prompt: str = os.getenv('user_prompt') or ''
     system_prompt = f'''
@@ -28,5 +28,6 @@ class llm:
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
 - do not try do everything at once, one tool should be run once per request
 - IMPORTANT: DO NOT RETURN RESPONSE TO USER UNTIL APP IS FULLY TESTET WITH PODMAN EXEC TOOL AND CONFIRMED WORKING
+- When you believe you've completed everything, include '##DONE##' in your final message.
 '''
 
