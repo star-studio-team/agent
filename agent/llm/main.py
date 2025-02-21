@@ -35,7 +35,7 @@ async def main():
             else:
                 user_prompt = input('message> ')
 
-            with config.llm.log_file.open(mode="a", encoding="utf-8") as f:
+            with config.app.log_file.open(mode="a", encoding="utf-8") as f:
                 original_stdout = sys.stdout
                 sys.stdout = Tee(sys.stdout, f)
                 print(f"user prompt: {user_prompt}\n")

@@ -1,6 +1,6 @@
 from pathlib import Path
 import pydantic_ai.models.gemini
-import os, tempfile, datetime
+import os
 
 
 class podman:
@@ -19,7 +19,6 @@ class llm:
     stream: bool = True
     delta: bool = False
     user_prompt: str = os.getenv('user_prompt') or ''
-    log_file: Path = Path(tempfile.gettempdir()) / f'agent_{datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")}.log'
     user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
 - you are able to run any commands in podman container
@@ -31,7 +30,10 @@ class llm:
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
 - do not try do everything at once, one tool should be run once per request
 - use `nohup` for projects and scripts that run continuously in a loop and can only be stopped with Ctrl + C. You can view the logs for these commands in `nohup.out`
-- IMPORTANT: DO NOT RETURN RESPONSE TO USER UNTIL APP IS FULLY TESTET WITH PODMAN EXEC TOOL AND CONFIRMED WORKING
+- IMPORTANT: DO NOT RETURN RESPONSE TO USER UNTIL APP IS FULLY TESTED WITH PODMAN EXEC TOOL AND CONFIRMED WORKING
 - When you believe you've completed everything, include '##DONE##' in your final message.
 '''
+
+class app:
+    log_file: Path
 

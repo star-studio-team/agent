@@ -1,6 +1,9 @@
 from agent.core import config, common
+from pathlib import Path
 import pydantic_ai
 import agent.podman
+import tempfile
+import datetime
 import httpx
 
 
@@ -21,5 +24,9 @@ def init():
     common.transport = httpx.AsyncHTTPTransport(
         uds=config.podman.socket
     )
+    temp: Path = Path(tempfile.gettempdir())
+    now: str = datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")
+    config.app.log_file = temp / f'agent_{now}.log'
+
 
 
