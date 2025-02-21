@@ -38,11 +38,11 @@ async def main():
                 user_prompt = input('message> ')
 
             # logs system
-            os.makedirs("logs", exist_ok=True)
+            os.makedirs("tmp", exist_ok=True)
             timenow = datetime.now().strftime("%H-%M:%d-%m-%Y")
             user_prompt_cut = "_".join(user_prompt.split()[:10])
             log_filename = f"{timenow}:{user_prompt_cut}.txt"
-            log_path = os.path.join("logs", log_filename)
+            log_path = os.path.join("tmp", log_filename)
             # logs system
 
             with open(log_path, "w", encoding="utf-8") as f:
