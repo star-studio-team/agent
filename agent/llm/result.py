@@ -2,6 +2,7 @@ from agent.core import config, common
 import pydantic_ai
 import rich.markdown
 import rich.live
+import asyncio
 
 
 async def stream_delta(
@@ -23,6 +24,7 @@ async def stream_no_delta(
 message_history = []
 async def stream(user_prompt: str):
     while True:
+        await asyncio.sleep(4)
         try:
             async with common.agent.run_stream(
                 user_prompt=user_prompt,
@@ -47,8 +49,7 @@ async def stream(user_prompt: str):
         except pydantic_ai.exceptions.UnexpectedModelBehavior as e:
             if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
                 print(f'error: 429')
-                import asyncio
-                await asyncio.sleep(90)
+                await asyncio.sleep(30)
                 continue
             else:
                 print(f'error: {e}')
