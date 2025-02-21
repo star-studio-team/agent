@@ -1,6 +1,8 @@
 from agent.core import config, common
 import agent.llm.writer
+import re
 
+CONTROL_CHARS_REGEX = re.compile(r'[\x00-\x1F\x7F-\x9F]')
 
 async def exec(
     command: list[str],
@@ -29,6 +31,7 @@ async def exec(
     ) as executed:
         async for chunk in executed.aiter_bytes():
             data = chunk.decode('utf-8', errors='ignore')
+            data = CONTROL_CHARS_REGEX.sub('', data)
             writer.write(data, end='')
     writer.write('')
     return writer.output
