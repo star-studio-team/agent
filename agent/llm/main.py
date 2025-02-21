@@ -1,6 +1,4 @@
 import sys
-import os
-from datetime import datetime
 from agent.core import config, common
 import agent.llm.result
 import agent.llm.init
@@ -37,15 +35,7 @@ async def main():
             else:
                 user_prompt = input('message> ')
 
-            # logs system
-            os.makedirs("tmp", exist_ok=True)
-            timenow = datetime.now().strftime("%H-%M:%d-%m-%Y")
-            user_prompt_cut = "_".join(user_prompt.split()[:10])
-            log_filename = f"{timenow}:{user_prompt_cut}.txt"
-            log_path = os.path.join("tmp", log_filename)
-            # logs system
-
-            with open(log_path, "w", encoding="utf-8") as f:
+            with config.llm.log_file.open(mode="a", encoding="utf-8") as f:
                 original_stdout = sys.stdout
                 sys.stdout = Tee(sys.stdout, f)
                 print(f"user prompt: {user_prompt}\n")
