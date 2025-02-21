@@ -12,8 +12,6 @@ class Writer:
         data: str,
         end: str = '\n',
     ):
-        global output
-        global live
         data += end
         self.output += data
         if agent.core.config.llm.stream and agent.core.config.llm.delta:
