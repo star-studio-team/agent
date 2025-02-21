@@ -13,9 +13,13 @@ async def main():
     ) as client:
         common.client = client
         env_user_prompt = config.llm.user_prompt
+        file_user_prompt = config.llm.user_prompt_file
         while True:
             if env_user_prompt:
                 user_prompt = env_user_prompt
+            elif file_user_prompt.is_file():
+                print('use prompt.txt')
+                user_prompt = file_user_prompt.read_text(encoding='utf-8')
             else:
                 user_prompt = input('message> ')
             print('waiting for response, it can be very long...')

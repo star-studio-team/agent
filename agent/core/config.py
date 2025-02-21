@@ -1,3 +1,4 @@
+from pathlib import Path
 import pydantic_ai.models.gemini
 import os
 
@@ -18,6 +19,7 @@ class llm:
     stream: bool = True
     delta: bool = False
     user_prompt: str = os.getenv('user_prompt') or ''
+    user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
 - you are able to run any commands in podman container
 - default image is {podman.default_image}
