@@ -6,7 +6,7 @@ import rich.live
 import httpx
 
 client: httpx.AsyncClient
-console: rich.console.Console = rich.console.Console(no_color=True, force_terminal=False)
+console: rich.console.Console = rich.console.Console(log_path=False)
 output: str = ''
 live: rich.live.Live
 model: pydantic_ai.models.Model

@@ -27,6 +27,11 @@ def init():
     temp: Path = Path(tempfile.gettempdir())
     now: str = datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")
     config.app.log_file = temp / f'agent_{now}.log'
-
-
+    if config.llm.user_prompt:
+        common.console.log(f'[blue]message>[/blue] {config.llm.user_prompt}')
+    elif config.llm.user_prompt_file.is_file():
+        config.llm.user_prompt = config.llm.user_prompt_file.read_text(encoding='utf-8')
+        common.console.log(f'[blue]message>[/blue] {config.llm.user_prompt}')
+    else:
+        config.llm.user_prompt = input('user message> ')
 

@@ -24,29 +24,15 @@ async def main():
         timeout=config.podman.timeout,
     ) as client:
         common.client = client
-        env_user_prompt = config.llm.user_prompt
-        file_user_prompt = config.llm.user_prompt_file
-        while True:
-            if env_user_prompt:
-                user_prompt = env_user_prompt
-            elif file_user_prompt.is_file():
-                print('use prompt.txt')
-                user_prompt = file_user_prompt.read_text(encoding='utf-8')
+        with config.app.log_file.open(mode="a", encoding="utf-8") as f:
+            original_stdout = sys.stdout
+            sys.stdout = Tee(sys.stdout, f)
+            print('waiting for response, it can be very long...')
+            if config.llm.stream:
+                await agent.llm.result.stream(config.llm.user_prompt)
             else:
-                user_prompt = input('message> ')
-
-            with config.app.log_file.open(mode="a", encoding="utf-8") as f:
-                original_stdout = sys.stdout
-                sys.stdout = Tee(sys.stdout, f)
-                print(f"user prompt: {user_prompt}\n")
-                print('waiting for response, it can be very long...')
-                if config.llm.stream:
-                    await agent.llm.result.stream(user_prompt)
-                else:
-                    await agent.llm.result.no_stream(user_prompt)
-                sys.stdout = original_stdout
-            await agent.podman.stop()
-            await agent.podman.delete()
-            if env_user_prompt or file_user_prompt:
-                break
+                await agent.llm.result.no_stream(config.llm.user_prompt)
+            sys.stdout = original_stdout
+        await agent.podman.stop()
+        await agent.podman.delete()
 
