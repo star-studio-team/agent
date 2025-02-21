@@ -1,9 +1,23 @@
+import sys
+import os
+from datetime import datetime
 from agent.core import config, common
 import agent.llm.result
 import agent.llm.init
 import agent.podman
 import httpx
 
+class Tee:
+    def __init__(self, *files):
+        self.files = files
+
+    def write(self, data):
+        for f in self.files:
+            f.write(data)
+
+    def flush(self):
+        for f in self.files:
+            f.flush()
 
 async def main():
     agent.llm.init.init()
@@ -22,13 +36,26 @@ async def main():
                 user_prompt = file_user_prompt.read_text(encoding='utf-8')
             else:
                 user_prompt = input('message> ')
-            print('waiting for response, it can be very long...')
-            if config.llm.stream:
-                await agent.llm.result.stream(user_prompt)
-            else:
-                await agent.llm.result.no_stream(user_prompt)
+
+            # logs system
+            os.makedirs("logs", exist_ok=True)
+            timenow = datetime.now().strftime("%H-%M:%d-%m-%Y")
+            user_prompt_cut = "_".join(user_prompt.split()[:10])
+            log_filename = f"{timenow}:{user_prompt_cut}.txt"
+            log_path = os.path.join("logs", log_filename)
+            # logs system
+
+            with open(log_path, "w", encoding="utf-8") as f:
+                original_stdout = sys.stdout
+                sys.stdout = Tee(sys.stdout, f)
+                print(f"user prompt: {user_prompt}\n")
+                print('waiting for response, it can be very long...')
+                if config.llm.stream:
+                    await agent.llm.result.stream(user_prompt)
+                else:
+                    await agent.llm.result.no_stream(user_prompt)
+                sys.stdout = original_stdout
             await agent.podman.stop()
             await agent.podman.delete()
             if env_user_prompt or file_user_prompt:
                 break
-

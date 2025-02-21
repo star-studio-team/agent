@@ -4,6 +4,9 @@ __MACOSX
 .secrets
 .venv
 
+# logs
+logs/
+
 # local env files
 .env.local
 .env.*.local
@@ -16,4 +19,3 @@ __MACOSX
 *.njsproj
 *.sln
 *.sw?
-
