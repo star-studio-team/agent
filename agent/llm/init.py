@@ -14,8 +14,8 @@ def init():
         system_prompt=config.llm.system_prompt,
         retries=config.llm.retries,
         tools=[
-            agent.podman.run,
-            agent.podman.bash,
+            pydantic_ai.Tool(agent.podman.run),
+            pydantic_ai.Tool(agent.podman.bash),
         ]
     )
     common.transport = httpx.AsyncHTTPTransport(
