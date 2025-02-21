@@ -1,6 +1,6 @@
 from pathlib import Path
 import pydantic_ai.models.gemini
-import os
+import os, tempfile, datetime
 
 
 class podman:
@@ -19,6 +19,7 @@ class llm:
     stream: bool = True
     delta: bool = False
     user_prompt: str = os.getenv('user_prompt') or ''
+    log_file: Path = Path(tempfile.gettempdir()) / f'agent_{datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")}.log'
     user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
 - you are able to run any commands in podman container
