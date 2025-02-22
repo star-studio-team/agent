@@ -4,7 +4,8 @@ import os
 
 
 class podman:
-    image: str = 'registry.fedoraproject.org/fedora-toolbox:latest'
+    image: str = os.getenv('image') or 'registry.fedoraproject.org/fedora-toolbox:latest'
+    image_pkg: str = os.getenv('image_pkg') or 'dnf'
     container_name: str = 'agent'
     socket: str = '/run/user/1000/podman/podman.sock'
     api_url: str = 'http://localhost/v5.0.0/libpod'
@@ -22,7 +23,7 @@ class llm:
     user_prompt: str = os.getenv('user_prompt') or ''
     user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
-- you can use tools to run bash commands in {podman.image} podman container, your package manager is dnf
+- you can use tools to run bash commands in {podman.image} podman container, your package manager is {podman.image_pkg}
 - you can read files with cat command, create files with tee command
 - you should solve tasks with little steps, write small code parts and test each part
 - you have two almost similar tools `run`, and `bash`
