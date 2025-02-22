@@ -8,11 +8,13 @@ from agent.podman.start import start
 from agent.podman.exec import exec
 from agent.core import config
 import agent.llm.writer
+import asyncio
 
 
 async def bash(
     command: str,
     image: str = config.podman.default_image,
+    timeout: float = 60.0
 ) -> str:
     '''
     run bash command in podman container
@@ -30,8 +32,14 @@ async def bash(
         await pull()
         await create()
     await start()
-    return await exec(
-        command=['bash', '-c', command],
-        writer=writer,
-    )
+    try:
+        output = await asyncio.wait_for(
+            exec(command=['bash', '-c', command], writer=writer),
+            timeout=timeout
+        )
+    except asyncio.TimeoutError:
+        await stop()
+        output = writer.output
+
+    return output
 
