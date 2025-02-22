@@ -74,6 +74,12 @@ wheels = [
 ]
 
 [[package]]
+name = "html2text"
+version = "2024.2.26"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1a/43/e1d53588561e533212117750ee79ad0ba02a41f52a08c1df3396bd466c05/html2text-2024.2.26.tar.gz", hash = "sha256:05f8e367d15aaabc96415376776cdd11afd5127a77fce6e36afc60c563ca2c32", size = 56527 }
+
+[[package]]
 name = "httpcore"
 version = "1.0.7"
 source = { registry = "https://pypi.org/simple" }
@@ -274,6 +280,7 @@ name = "star-agent"
 version = "25.0.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "html2text" },
     { name = "httpx" },
     { name = "pydantic-ai-slim" },
     { name = "rich" },
@@ -281,6 +288,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "html2text", specifier = ">=2024.2.26" },
     { name = "httpx" },
     { name = "pydantic-ai-slim" },
     { name = "rich" },

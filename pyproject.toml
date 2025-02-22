@@ -3,6 +3,7 @@ dependencies = [
     'pydantic-ai-slim',
     'httpx',
     'rich',
+    "html2text>=2024.2.26",
 ]
 name = 'star_agent'
 version = '25.0.0'
