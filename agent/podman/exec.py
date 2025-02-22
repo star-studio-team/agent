@@ -1,5 +1,6 @@
 from agent.podman.stop import stop
 from agent.core import config, common
+import rich.errors
 import rich.syntax
 import rich.live
 import asyncio
@@ -74,6 +75,9 @@ async def exec(
         await stop()
         podman_output.append('podman command timed out')
         common.console.print('[bold orange1]<podman command timed out>\n')
+    except rich.errors.LiveError:
+        common.console.print('[bold orange1]<you can\'t run multiple commands at once>\n')
+        podman_output.append('you can\'t run multiple commands at once')
     else:
         common.console.print()
     return ''.join(podman_output)

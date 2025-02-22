@@ -1,10 +1,7 @@
 from agent.core import config, common
-import agent.llm.writer
 
 
-async def stop(
-    writer: agent.llm.writer.Writer = agent.llm.writer.Writer(),
-) -> str:
+async def stop() -> None:
     '''
     stop podman container
     '''
@@ -13,11 +10,10 @@ async def stop(
     )
     match resp.status_code:
         case 404:
-            writer.write('container does not exists')
+            common.console.print('[red]<can\'t stop container: container does not exists>')
         case 304:
-            writer.write('container already stopped')
+            common.console.print('[red]<can\'t stop container: container already stopped')
         case _:
             resp.raise_for_status()
-            writer.write('container stopped')
-    return writer.output
+            common.console.print('[bold orange1]<container stopped>')
 

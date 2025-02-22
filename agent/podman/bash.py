@@ -1,12 +1,9 @@
 from agent.podman.is_exists import is_exists
-from agent.podman.get_image import get_image
-from agent.podman.stop import stop
-from agent.podman.delete import delete
 from agent.podman.pull import pull
 from agent.podman.create import create
 from agent.podman.start import start
 from agent.podman.exec import exec
-from agent.core import config, common
+from agent.core import common
 import rich.syntax
 
 
