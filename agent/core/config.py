@@ -9,6 +9,7 @@ class podman:
     socket: str = '/run/user/1000/podman/podman.sock'
     api_url: str = 'http://localhost/v5.0.0/libpod'
     timeout: int = 600
+    del_container: bool = os.getenv('del_container', 'true').lower() not in ('0', 'false', 'no', 'off')
 
 
 class llm:
