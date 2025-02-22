@@ -27,6 +27,9 @@ async def exec_stream(
     exec_id: str,
     podman_output: list[str],
 ):
+    podman_output_str: str = ''
+    with config.app.log_file.open('a') as log:
+        log.write(common.console.export_text())
     async with common.client.stream(
         method='POST',
         url=f'{config.podman.api_url}/exec/{exec_id}/start',
@@ -37,7 +40,6 @@ async def exec_stream(
     ) as executed:
         with rich.live.Live(
             renderable='',
-            console=common.console,
             vertical_overflow='crop',
         ) as live:
             async for chunk in executed.aiter_bytes():
@@ -53,6 +55,10 @@ async def exec_stream(
                     lexer=lexer,
                 )
                 live.update(output_syntax)
+    remove_chars = ''.join(chr(i) for i in range(32))
+    to_log = podman_output_str.lstrip(remove_chars) + '\n'
+    with config.app.log_file.open('a') as log:
+        log.write(to_log)
 
 
 async def exec(

@@ -8,8 +8,13 @@ import datetime
 
 async def init():
     temp: Path = Path(tempfile.gettempdir())
-    now: str = datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")
-    config.app.log_file = temp / f'agent_{now}.log'
+    temp_agent = temp / 'agent'
+    temp_agent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+    now: str = datetime.datetime.now().strftime("%d.%m.%Y_%H-%M-%S")
+    config.app.log_file = temp_agent / f'{now}.log'
     common.console.print('[blue]<prompt>[/blue] ', end='')
     if await agent.podman.is_exists():
         if await agent.podman.get_image() != config.podman.image:
