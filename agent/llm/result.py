@@ -5,62 +5,41 @@ import rich.live
 import asyncio
 
 
-async def stream_delta(
-    result: pydantic_ai.agent.result.StreamedRunResult,
-    live: rich.live.Live,
-):
-    async for chunk in result.stream_text(delta=True):
-        common.output += chunk
-        live.update(rich.markdown.Markdown(common.output))
+async def run_stream() -> str:
+    async with common.agent.run_stream(
+        user_prompt=config.llm.user_prompt,
+        message_history=common.message_history,
+    ) as result:
+        common.console.print('[light_green]<response>')
+        with rich.live.Live(
+            renderable='',
+            console=common.console,
+            vertical_overflow='crop',
+        ) as live:
+            async for message in result.stream_text():
+                live.update(rich.markdown.Markdown(message))
+    common.console.print()
+    result_data = await result.get_data()
+    common.message_history.extend(result.new_messages())
+    return result_data
 
 
-async def stream_no_delta(
-    result: pydantic_ai.agent.result.StreamedRunResult,
-    live: rich.live.Live,
-):
-    async for message in result.stream_text(delta=False):
-        live.update(rich.markdown.Markdown(message))
-
-message_history = []
-async def stream(user_prompt: str):
+async def stream_cycle():
     while True:
-        await asyncio.sleep(4)
         try:
-            async with common.agent.run_stream(
-                user_prompt=user_prompt,
-                message_history=message_history
-            ) as result:
-                with rich.live.Live(
-                    renderable='',
-                    console=common.console,
-                    vertical_overflow='crop',
-                ) as live:
-                    common.live = live
-                    if config.llm.delta:
-                        await stream_delta(result, live)
-                    else:
-                        await stream_no_delta(result, live)
-                text = await result.get_data()
-                if "##DONE##" in text:
-                    break
-                new_message = result.new_messages()
-                message_history.extend(new_message)
-            user_prompt = ''
+            result_text = await run_stream()
         except pydantic_ai.exceptions.UnexpectedModelBehavior as e:
-            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                print(f'error: 429')
+            if '429' in str(e) or 'RESOURCE_EXHAUSTED' in str(e):
+                common.console.print('[red]<error>[/red] 429, sleeping for 30 seconds\n')
                 await asyncio.sleep(30)
                 continue
+        else:
+            if '##DONE##' in result_text:
+                break
+            config.llm.user_prompt = 'continue'
+            if config.app.sleep:
+                common.console.print(f'[slate_blue3]<llm stopped dialog, sleeping {config.app.sleep} and continuig...>\n')
+                await asyncio.sleep(config.app.sleep)
             else:
-                print(f'error: {e}')
-                continue
-    common.console.print(message_history)
-
-
-async def no_stream(user_prompt: str):
-    result = await common.agent.run(
-        user_prompt=user_prompt,
-    )
-    common.console.print(result.data)
-    common.console.print(result.all_messages())
+                common.console.print('[slate_blue3]<llm stopped dialog, continuig...>\n')
 

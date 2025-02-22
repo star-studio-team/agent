@@ -1,14 +1,11 @@
+from agent.podman.stop import stop
 from agent.core import config, common
-import agent.llm.writer
-import re
+import rich.syntax
+import rich.live
+import asyncio
 
-CONTROL_CHARS_REGEX = re.compile(r'[\x00-\x1F\x7F-\x9F]')
 
-async def exec(
-    command: list[str],
-    writer: agent.llm.writer.Writer = agent.llm.writer.Writer(),
-) -> str:
-    print("exec command: ", command)
+async def exec_create(command: list[str]) -> str:
     created = await common.client.post(
         url=f'{config.podman.api_url}/containers/{config.podman.container_name}/exec',
         json={
@@ -18,22 +15,66 @@ async def exec(
         }
     )
     if created.status_code == 404:
-        writer.write(str(created.json()))
-        return writer.output
+        json = created.json()
+        common.console.print(json)
+        return str(json)
     created.raise_for_status()
-    exec_id = created.json()['Id']
+    return created.json()['Id']
+
+
+async def exec_stream(
+    exec_id: str,
+    podman_output: list[str],
+):
     async with common.client.stream(
         method='POST',
         url=f'{config.podman.api_url}/exec/{exec_id}/start',
         json={
-            'Detach': False,
-            'Tty': False
+            'detach': False,
+            'tty': False
         }
     ) as executed:
-        async for chunk in executed.aiter_bytes():
-            data = chunk.decode('utf-8', errors='ignore')
-            data = CONTROL_CHARS_REGEX.sub('', data)
-            writer.write(data, end='')
-    writer.write('')
-    return writer.output
+        with rich.live.Live(
+            renderable='',
+            console=common.console,
+            vertical_overflow='crop',
+        ) as live:
+            async for chunk in executed.aiter_bytes():
+                chunk_decoded = chunk.decode('utf-8', errors='ignore')
+                podman_output.append(chunk_decoded)
+                podman_output_str = ''.join(podman_output).strip()
+                lexer = rich.syntax.Syntax.guess_lexer(
+                    path='',
+                    code=podman_output_str,
+                )
+                output_syntax = rich.syntax.Syntax(
+                    code=podman_output_str,
+                    lexer=lexer,
+                )
+                live.update(output_syntax)
+
+
+async def exec(
+    command: list[str],
+    timeout_seconds: int,
+) -> str:
+    exec_id = await exec_create(command)
+    podman_output: list = []
+    coroutine = exec_stream(
+        exec_id=exec_id,
+        podman_output=podman_output,
+    )
+    common.console.print('[bold orange1]<output>')
+    try:
+        await asyncio.wait_for(
+            fut=coroutine,
+            timeout=timeout_seconds,
+        )
+    except asyncio.TimeoutError:
+        await stop()
+        podman_output.append('podman command timed out')
+        common.console.print('[bold orange1]<podman command timed out>\n')
+    else:
+        common.console.print()
+    return ''.join(podman_output)
 

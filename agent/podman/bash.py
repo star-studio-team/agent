@@ -6,40 +6,30 @@ from agent.podman.pull import pull
 from agent.podman.create import create
 from agent.podman.start import start
 from agent.podman.exec import exec
-from agent.core import config
-import agent.llm.writer
-import asyncio
+from agent.core import config, common
+import rich.syntax
 
 
 async def bash(
     command: str,
-    image: str = config.podman.default_image,
-    timeout: float = 60.0
+    timeout_seconds: int = 60,
 ) -> str:
     '''
     run bash command in podman container
-    you should not provide 'image' arg unless you explicitly need some custom image
-    returns command and output
     example for creating a file:
-    await podman.run(command='echo "file content" | tee /tmp/file.txt')
+    await bash(command='echo "file content" | tee /tmp/file.txt')
     '''
-    writer = agent.llm.writer.Writer()
-    writer.write(f'> {command}')
-    if await is_exists() and await get_image() != image:
-        await stop()
-        await delete()
     if not await is_exists():
         await pull()
         await create()
     await start()
-    try:
-        output = await asyncio.wait_for(
-            exec(command=['bash', '-c', command], writer=writer),
-            timeout=timeout
-        )
-    except asyncio.TimeoutError:
-        await stop()
-        output = writer.output
-
-    return output
+    command_syntax = rich.syntax.Syntax(
+        code=command,
+        lexer='bash',
+    )
+    common.console.print('[bold orange1]<executing bash command>', command_syntax)
+    return await exec(
+        command=['bash', '-c', command],
+        timeout_seconds=timeout_seconds,
+    )
 

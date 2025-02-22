@@ -1,21 +1,17 @@
 from agent.core import config, common
-import agent.llm.writer
 import json
 
 
-async def pull(
-    image: str = config.podman.default_image,
-    writer: agent.llm.writer.Writer = agent.llm.writer.Writer(),
-) -> str:
+async def pull() -> None:
     '''
     pull podman image
     '''
-    writer.write(f'pulling {image}')
+    common.console.print(f'pulling {config.podman.image}')
     async with common.client.stream(
         method='POST',
         url=f'{config.podman.api_url}/images/pull',
         params={
-            'reference': image,
+            'reference': config.podman.image,
             'compatMode': True,
         }
     ) as resp:
@@ -23,8 +19,7 @@ async def pull(
             data = json.loads(chunk)
             data_str = chunk.decode(errors='ignore')
             if 'progress' in data:
-                writer.write(data['progress'])
+                common.console.print(data['progress'])
             else:
-                writer.write(data_str)
-    return writer.output
+                common.console.print(data_str)
 
