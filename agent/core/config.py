@@ -10,6 +10,9 @@ class podman:
     api_url: str = 'http://localhost/v5.0.0/libpod'
     timeout: int = 600
 
+class web:
+    api_host: str = os.getenv('web_host') or '4get.ch'
+    api_url: str = f'https://{api_host}/api/v1/web'
 
 class llm:
     model_class = pydantic_ai.models.gemini.GeminiModel
@@ -24,6 +27,9 @@ class llm:
 - you should solve tasks with little steps, write small code parts and test each part
 - you have two almost similar tools `run`, and `bash`
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
+- you can also use the `google_search` and `open_url` tools to look up information on the internet
+- for searching the internet, you have two tools
+- if possible, you should give preference to `google_search` to get the correct url, then use `open_url` to retrieve information from the site
 - do not try do everything at once, one tool should be run once per request
 - you should not write containerfiles, just use bash tool, container already created
 - IMPORTANT: DO NOT RETURN RESPONSE TO USER UNTIL APP IS FULLY TESTED WITH PODMAN EXEC TOOL AND CONFIRMED WORKING
