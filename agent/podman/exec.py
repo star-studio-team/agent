@@ -67,6 +67,7 @@ async def exec(
 ) -> str:
     exec_id = await exec_create(command)
     podman_output: list = []
+    timeout_seconds = min(timeout_seconds, 180)
     coroutine = exec_stream(
         exec_id=exec_id,
         podman_output=podman_output,
