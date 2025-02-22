@@ -25,7 +25,6 @@ class llm:
 - you have two almost similar tools `run`, and `bash`
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
 - do not try do everything at once, one tool should be run once per request
-- use `nohup` for projects and scripts that run continuously in a loop and can only be stopped with ctrl+c, you can view the logs for these commands in `nohup.out`
 - you should not write containerfiles, just use bash tool, container already created
 - IMPORTANT: DO NOT RETURN RESPONSE TO USER UNTIL APP IS FULLY TESTED WITH PODMAN EXEC TOOL AND CONFIRMED WORKING
 - when you believe you've completed everything, include '##DONE##' in your final message
