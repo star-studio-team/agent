@@ -15,7 +15,7 @@ async def run(
     you should avoid using this tool, and use bash tool if possible
     use this tool only if bash not working
     example:
-    await run(command=['echo', 'hello world'])
+    await run(command=['echo', 'hello world'], timeout_seconds=int(60))
     '''
     if not await is_exists():
         await pull()

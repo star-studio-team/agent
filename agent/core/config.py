@@ -27,6 +27,8 @@ class llm:
 - you should solve tasks with little steps, write small code parts and test each part
 - you have two almost similar tools `run`, and `bash`
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
+- use `timeout` (in seconds) in `bash` and `run` tools to either shorten or extend the execution time for commands
+- for commands that have no end (running in a loop), use a timeout of 15 seconds or less
 - you can also use the `google_search` and `open_url` tools to look up information on the internet
 - for searching the internet, you have two tools
 - if possible, you should give preference to `google_search` to get the correct url, then use `open_url` to retrieve information from the site

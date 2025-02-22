@@ -17,7 +17,7 @@ async def bash(
     await bash(command="""cat > /tmp/file.txt << EOF
     file content
     EOF
-    """)
+    """, timeout_seconds=int(60))
     '''
     if not await is_exists():
         await pull()
