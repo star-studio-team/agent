@@ -2,6 +2,7 @@ from agent.core import config, common
 from pathlib import Path
 import pydantic_ai
 import agent.podman
+import agent.web
 import tempfile
 import datetime
 
@@ -31,6 +32,8 @@ async def init():
         tools=[
             pydantic_ai.Tool(agent.podman.run),
             pydantic_ai.Tool(agent.podman.bash),
+            pydantic_ai.Tool(agent.web.google_search),
+            pydantic_ai.Tool(agent.web.open_url)
         ]
     )
     if config.llm.user_prompt:
