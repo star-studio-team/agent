@@ -81,7 +81,7 @@ async def exec(
     except asyncio.TimeoutError:
         await stop()
         podman_output.append('podman command timed out')
-        common.console.print('[bold orange1]<podman command timed out>\n')
+        common.console.print(f'[bold orange1]<podman command timed out>[/bold orange1] [blue][{timeout_seconds}][/blue]\n')
     except rich.errors.LiveError:
         common.console.print('[bold orange1]<you can\'t run multiple commands at once>\n')
         podman_output.append('you can\'t run multiple commands at once')
