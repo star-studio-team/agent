@@ -34,5 +34,7 @@ async def main():
                 await agent.llm.result.no_stream(config.llm.user_prompt)
             sys.stdout = original_stdout
         await agent.podman.stop()
-        await agent.podman.delete()
+        if config.podman.del_container: 
+            print('delete container')
+            await agent.podman.delete()
 
