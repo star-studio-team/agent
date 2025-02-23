@@ -42,6 +42,6 @@ async def init():
         config.llm.user_prompt = config.llm.user_prompt_file.read_text(encoding='utf-8')
         common.console.print(config.llm.user_prompt)
     else:
-        config.llm.user_prompt = input('<prompt> ')
+        config.llm.user_prompt = input()
     common.console.print()
 
