@@ -24,12 +24,15 @@ class llm:
     user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
 - you can use tools to run bash commands in {podman.image} podman container, your package manager is {podman.image_pkg}
-- you can read files with cat command, create files with tee command
+- you can read files with cat command, create files with cat EOF command
 - you should solve tasks with little steps, write small code parts and test each part
-- you have two almost similar tools `run`, and `bash`
+- you have three almost similar tools `run`, `nohup`, and `bash`
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible
 - use `timeout` (in seconds) in `bash` and `run` tools to either shorten or extend the execution time for commands
 - for commands that have no end (running in a loop), use a timeout of 15 seconds or less
+- there is also a `nohup` tool for looping commands
+- use `nohup` tool if you want to send a command to the background and do something in parallel
+- the `nohup` tool gives the PID of the process, memorize it and kill the command when it is not needed
 - you can also use the `google_search` and `open_url` tools to look up information on the internet
 - for searching the internet, you have two tools
 - if possible, you should give preference to `google_search` to get the correct url, then use `open_url` to retrieve information from the site
