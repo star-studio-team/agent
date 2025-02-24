@@ -17,6 +17,7 @@ async def exec(
             'attachstderr': True,
         },
     )
+    exec_create.raise_for_status()
     exec_id = exec_create.json()['Id']
     exec_start = await common.client.post(
         url=f'{config.podman.api_url}/exec/{exec_id}/start',
