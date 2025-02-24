@@ -1,6 +1,7 @@
 from agent.core import config, common
 import json
 
+
 async def search_4get(query: str) -> list:
     data_str = str()
     async with common.client_ssl.stream(
@@ -26,12 +27,13 @@ async def search_4get(query: str) -> list:
         })
     return simplified_list
 
+
 async def google_search(query: str) -> str:
-    """
+    '''
     search from google.
     example for search python version:
     await google_search(query='latest version of python')
-    """
+    '''
     common.console.print('[bold orange1]<internet search>', query)
     data = await search_4get(query)
     return str(data)
