@@ -24,7 +24,7 @@ class llm:
     user_prompt_file: Path = Path.cwd() / 'prompt.txt'
     system_prompt = f'''
 - you can use tools to run bash commands in {podman.image} podman container, your package manager is {podman.image_pkg}
-- you can read files with cat command, create files with cat EOF command
+- you can read files with cat command, create files with `create_file` tool
 - you should solve tasks with little steps, write small code parts and test each part
 - you have three almost similar tools `run`, `nohup`, and `bash`
 - `bash` tool should be prefferred if possible, `run` tool should be avoided if possible

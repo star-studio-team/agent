@@ -33,6 +33,7 @@ async def init():
             pydantic_ai.Tool(agent.podman.run),
             pydantic_ai.Tool(agent.podman.bash),
             pydantic_ai.Tool(agent.podman.nohup),
+            pydantic_ai.Tool(agent.podman.create_file),
             pydantic_ai.Tool(agent.web.google_search),
             pydantic_ai.Tool(agent.web.open_url)
         ]

@@ -1,7 +1,7 @@
 from agent.core import config, common
 
 
-async def create() -> None:
+async def create_container() -> None:
     '''
     create podman container
     '''

@@ -7,7 +7,7 @@ import asyncio
 
 
 async def exec_create(command: list[str]) -> str:
-    created = await common.client.post(
+    resp = await common.client.post(
         url=f'{config.podman.api_url}/containers/{config.podman.container_name}/exec',
         json={
             'cmd': command,
@@ -15,12 +15,8 @@ async def exec_create(command: list[str]) -> str:
             'attachstderr': True,
         }
     )
-    if created.status_code == 404:
-        json = created.json()
-        common.console.print(json)
-        return str(json)
-    created.raise_for_status()
-    return created.json()['Id']
+    resp.raise_for_status()
+    return resp.json()['Id']
 
 
 async def exec_stream(
@@ -33,10 +29,7 @@ async def exec_stream(
     async with common.client.stream(
         method='POST',
         url=f'{config.podman.api_url}/exec/{exec_id}/start',
-        json={
-            'detach': False,
-            'tty': False
-        }
+        json={}
     ) as executed:
         with rich.live.Live(
             renderable='',

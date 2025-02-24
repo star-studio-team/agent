@@ -1,6 +1,6 @@
 from agent.podman.is_exists import is_exists
 from agent.podman.pull import pull
-from agent.podman.create import create
+from agent.podman.create_container import create_container
 from agent.podman.start import start
 from agent.podman.exec import exec
 from agent.core import common
@@ -18,7 +18,7 @@ async def nohup(
     '''
     if not await is_exists():
         await pull()
-        await create()
+        await create_container()
     await start()
     command_syntax = rich.syntax.Syntax(
         code=command,
