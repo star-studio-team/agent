@@ -8,6 +8,7 @@ from agent.podman.start import start
 from agent.podman.exec import exec
 from agent.podman.run import run
 from agent.podman.bash import bash
+from agent.podman.nohup import nohup
 
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     'get_image',
     'run',
     'bash',
+    'nohup',
 ]
 
