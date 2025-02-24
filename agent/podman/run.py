@@ -21,7 +21,7 @@ async def run(
         await pull()
         await create()
     await start()
-    common.console.print(f'[bold orange1]<executing>[/bold orange1] [blue][{timeout_seconds}][/blue]', command)
+    common.console.print(f'[bold orange1]<executing>[/bold orange1] [blue](timeout={timeout_seconds})[/blue]', command)
     return await exec(
         command=command,
         timeout_seconds=timeout_seconds,

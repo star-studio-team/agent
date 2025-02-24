@@ -42,7 +42,7 @@ async def stream_cycle():
                 break
             config.llm.user_prompt = 'continue'
             if config.app.sleep:
-                common.console.print(f'[slate_blue3]<llm stopped dialog, sleeping {config.app.sleep} and continuig...>\n')
+                common.console.print(f'[slate_blue3]<llm stopped dialog, sleeping {config.app.sleep} seconds and continuig...>\n')
                 await asyncio.sleep(config.app.sleep)
             else:
                 common.console.print('[slate_blue3]<llm stopped dialog, continuig...>\n')

@@ -27,7 +27,7 @@ async def bash(
         code=command,
         lexer='bash',
     )
-    common.console.print(f'[bold orange1]<executing bash command>[/bold orange1] [blue][{timeout_seconds}][/blue]', command_syntax)
+    common.console.print(f'[bold orange1]<executing bash command>[/bold orange1] [blue](timeout={timeout_seconds})[/blue]', command_syntax)
     return await exec(
         command=['bash', '-c', command],
         timeout_seconds=timeout_seconds,
