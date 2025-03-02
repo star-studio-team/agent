@@ -40,7 +40,9 @@ async def stream_cycle():
         else:
             config.llm.user_prompt = 'continue'
             if '##DONE##' in result_text:
-                config.llm.user_prompt = common.console.input('[green]<message>[/green] ')
+                config.llm.user_prompt = common.console.input('[green]<message (type "quit" to exit)>[/green] ')
+                if config.llm.user_prompt.strip().lower() == 'quit':
+                    break
             if config.app.sleep:
                 common.console.print(f'[slate_blue3]<llm stopped dialog, sleeping {config.app.sleep} seconds and continuig...>\n')
                 await asyncio.sleep(config.app.sleep)
