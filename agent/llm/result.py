@@ -1,5 +1,6 @@
 from agent.core import config, common
 import pydantic_ai
+import pydantic_ai, pydantic_core
 import rich.markdown
 import rich.live
 import asyncio
@@ -32,6 +33,9 @@ async def stream_cycle():
     while True:
         try:
             result_text = await run_stream()
+        except pydantic_core._pydantic_core.ValidationError:
+            common.console.print('[red]<error>[/red] Validation error')
+            continue
         except pydantic_ai.exceptions.UnexpectedModelBehavior as e:
             if '429' in str(e) or 'RESOURCE_EXHAUSTED' in str(e):
                 common.console.print('[red]<error>[/red] 429, sleeping for 30 seconds\n')
