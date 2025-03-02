@@ -38,9 +38,9 @@ async def stream_cycle():
                 await asyncio.sleep(30)
                 continue
         else:
-            if '##DONE##' in result_text:
-                break
             config.llm.user_prompt = 'continue'
+            if '##DONE##' in result_text:
+                config.llm.user_prompt = common.console.input('[green]<message>[/green] ')
             if config.app.sleep:
                 common.console.print(f'[slate_blue3]<llm stopped dialog, sleeping {config.app.sleep} seconds and continuig...>\n')
                 await asyncio.sleep(config.app.sleep)
