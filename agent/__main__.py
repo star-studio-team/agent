@@ -13,7 +13,10 @@ async def async_main():
 
 
 def main():
-    asyncio.run(async_main())
+    try:
+        asyncio.run(async_main())
+    except KeyboardInterrupt:
+        print('\033[0;31mReceived Ctrl+C - exiting.\033[0m')
 
 
 if __name__ == '__main__':
