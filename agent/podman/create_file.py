@@ -51,9 +51,9 @@ async def create_file(
     )
     common.console.print(f'[bold orange1]<creating file>[/] {path}', syntax)
     writer = f'''
-cat <<EOF > {path}
+cat << EOF > {path}
 {content}
 EOF
 '''
-    await exec(['bash', '-c', writer])
+    await exec(['sh', '-c', writer])
 
