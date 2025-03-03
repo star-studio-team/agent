@@ -17,6 +17,7 @@ class web:
 
 class llm:
     model_class = pydantic_ai.models.gemini.GeminiModel
+    model_settings = pydantic_ai.models.gemini.GeminiModelSettings
     model_name: str = 'gemini-2.0-flash'
     api_key: str = os.getenv('api_key') or ''
     retries: int = 10

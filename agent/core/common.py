@@ -1,4 +1,5 @@
 import pydantic_ai.models
+import pydantic_ai.settings
 import pydantic_ai
 import rich.markdown
 import rich.console
