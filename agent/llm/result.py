@@ -3,13 +3,11 @@ import pydantic_ai, pydantic_core
 import rich.markdown
 import rich.live
 import asyncio
-from httpx import ReadTimeout
 
 
 async def run_stream() -> str:
     message: str = ''
     async with common.agent.run_stream(
-        model_settings=config.llm.model_settings(timeout=30),
         user_prompt=config.llm.user_prompt,
         message_history=common.message_history,
     ) as result:
@@ -34,9 +32,6 @@ async def stream_cycle():
     while True:
         try:
             result_text = await run_stream()
-        except ReadTimeout:
-            common.console.print('[red]<error>[/red] Timeout while creating or using run_stream')
-            continue
         except pydantic_core._pydantic_core.ValidationError:
             common.console.print('[red]<error>[/red] Validation error')
             continue
