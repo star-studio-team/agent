@@ -24,6 +24,7 @@ async def init():
     common.model = config.llm.model_class(
         model_name=config.llm.model_name,
         api_key=config.llm.api_key,
+        http_client=common.client_agent
     )
     common.agent = pydantic_ai.Agent(
         common.model,
