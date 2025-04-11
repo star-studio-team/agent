@@ -1,5 +1,6 @@
 from pathlib import Path
 import pydantic_ai.models.openai
+import pydantic_ai.models.gemini
 import os
 
 
@@ -16,8 +17,10 @@ class web:
     api_url: str = f'https://{api_host}/api/v1/web'
 
 class llm:
-    model_class = pydantic_ai.models.openai.OpenAIModel
-    model_name: str = 'openrouter/quasar-alpha'
+    openai_model_class = pydantic_ai.models.openai.OpenAIModel
+    gemini_model_class = pydantic_ai.models.gemini.GeminiModel
+    model_name: str = os.getenv('model_name') or 'gemini-2.0-flash'
+    openai_base_url: str = os.getenv('base_url') or 'https://openrouter.ai/api/v1'
     api_key: str = os.getenv('api_key') or ''
     retries: int = 10
     user_prompt: str = os.getenv('user_prompt') or ''

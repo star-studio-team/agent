@@ -21,12 +21,19 @@ async def init():
         if await agent.podman.get_image() != config.podman.image:
             await agent.podman.stop()
             await agent.podman.delete()
-    common.model = config.llm.model_class(
-        model_name=config.llm.model_name,
-        base_url="https://openrouter.ai/api/v1",
-        api_key=config.llm.api_key,
-        http_client=common.client_agent
-    )
+    if 'gemini' in config.llm.model_name:
+        common.model = config.llm.gemini_model_class(
+            model_name=config.llm.model_name,
+            api_key=config.llm.api_key,
+            http_client=common.client_agent
+        )
+    else:
+        common.model = config.llm.openai_model_class(
+            model_name=config.llm.model_name,
+            base_url=config.llm.openai_base_url,
+            api_key=config.llm.api_key,
+            http_client=common.client_agent
+        )
     common.agent = pydantic_ai.Agent(
         common.model,
         system_prompt=config.llm.system_prompt,
