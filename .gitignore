@@ -8,8 +8,7 @@ __MACOSX
 logs/
 
 # local env files
-.env.local
-.env.*.local
+.env*
 
 # editor directories and files
 .idea
