@@ -1,6 +1,6 @@
 [project]
 dependencies = [
-    'pydantic-ai-slim',
+    "pydantic-ai-slim[openai]",
     'httpx',
     'rich',
     "html2text>=2024.2.26",
