@@ -23,6 +23,7 @@ async def init():
             await agent.podman.delete()
     common.model = config.llm.model_class(
         model_name=config.llm.model_name,
+        base_url="https://openrouter.ai/api/v1",
         api_key=config.llm.api_key,
         http_client=common.client_agent
     )
@@ -47,4 +48,3 @@ async def init():
     else:
         config.llm.user_prompt = input()
     common.console.print()
-

@@ -1,5 +1,5 @@
 from pathlib import Path
-import pydantic_ai.models.gemini
+import pydantic_ai.models.openai
 import os
 
 
@@ -16,8 +16,8 @@ class web:
     api_url: str = f'https://{api_host}/api/v1/web'
 
 class llm:
-    model_class = pydantic_ai.models.gemini.GeminiModel
-    model_name: str = 'gemini-2.0-flash'
+    model_class = pydantic_ai.models.openai.OpenAIModel
+    model_name: str = 'openrouter/quasar-alpha'
     api_key: str = os.getenv('api_key') or ''
     retries: int = 10
     user_prompt: str = os.getenv('user_prompt') or ''
@@ -45,4 +45,3 @@ class llm:
 class app:
     sleep: int = int(os.getenv('sleep') or 0 )
     log_file: Path
-
